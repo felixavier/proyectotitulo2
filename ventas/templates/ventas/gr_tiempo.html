@@ -1,0 +1,162 @@
+{% extends "common/base.html" %}
+{% load static %}
+
+{% block title %}Ventas en el tiempo{% endblock %}
+
+{% block content %}
+
+
+
+<script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery-ui.min.js' %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static '/css/jquery-ui.min.css' %}" />    
+
+<h2>Ventas en el tiempo</h2>
+
+<div class="mt-4 mb-4 pt-2">
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="radioDay" value="day">
+        <label class="form-check-label" for="inlineRadio1">Día</label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="radioMonth" value="month" checked>
+        <label class="form-check-label" for="inlineRadio2">Mes</label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="radioYear" value="year">
+        <label class="form-check-label" for="inlineRadio3">Año</label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input type="text" class="form-control" id="dpInicio">
+        <label class="form-check-label" for="inlineRadio2">Desde</label>
+    </div>
+    <div class="form-check form-check-inline">
+        <input type="text" class="form-control" id="dpFin">
+        <label class="form-check-label" for="inlineRadio2">Hasta</label>
+    </div>
+    <div class="form-check form-check-inline">
+        <button type="button" class="btn btn-primary" id="buscar">Ver <i class="fas fa-chart-bar"></i></button>
+    </div>
+    <div class="form-check form-check-inline">
+        <i class="fas fa-cog fa-spin fa-2x" style="color: #006591; display:none;" id="loading-ico"></i>
+    </div>
+</div>
+
+<canvas id="myChart" width="400" height="200"></canvas>
+
+
+<script>
+    var ctx = document.getElementById("myChart");
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels:'',
+            datasets: [{
+                label: 'Total vendido ($)',
+                data: '',
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1.5
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }],
+                xAxes: [{                    
+                    
+                    type: 'time',
+                time: {
+                    displayFormats: {
+                        'millisecond': 'DD-MM-YYYY',
+                        'second': 'DD-MM-YYYY',
+                        'minute': 'DD-MM-YYYY',
+                        'hour': 'DD-MM-YYYY',
+                        'day': 'DD-MM-YYYY',
+                        'week': 'DD-MM-YYYY',
+                        'month': 'MM-YYYY',
+                        'quarter': 'YYYY',
+                        'year': 'YYYY',
+                    }
+                }
+                }]
+            }
+        }
+    });
+</script>
+
+<script>
+    var fecha = new Date();
+    fecha.setMonth(fecha.getMonth()-3);
+    var opciones = {  
+        closeText: 'Cerrar',
+        prevText: '<Ant',
+        nextText: 'Sig>',
+        currentText: 'Hoy',
+        monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+        monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+        dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+        dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mié', 'Juv', 'Vie', 'Sáb'],
+        dayNamesMin: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sá'],
+        weekHeader: 'Sm',
+        dateFormat: 'dd/mm/yy',
+        firstDay: 1,
+        isRTL: false,
+        showMonthAfterYear: false,
+        yearSuffix: '',
+        setDate: fecha
+    };
+    $( function() {
+      $( "#dpInicio" ).datepicker( opciones);
+      $( "#dpFin" ).datepicker( opciones);      
+      $('#dpInicio').datepicker("setDate", fecha);
+      $('#dpFin').datepicker("setDate", new Date());
+    });
+    $('#buscar').click(()=>{
+        $("#loading-ico").show();
+        $("#buscar").prop( "disabled", true );
+        var tipo = $("#radioDay").is(':checked') ? 'dia':($("#radioMonth").is(':checked') ? 'mes' : 'year');
+        $.ajax({
+        url: '/ventas/data',
+        data: {
+          'tipo': tipo,
+          'inicio': $('#dpInicio').val(),
+          'fin': $('#dpFin').val(),
+        },
+        dataType: 'json',
+        success: function (data) {
+          myChart.data.datasets[0].data = data.total;
+          myChart.data.labels = data.fecha;
+          myChart.update();
+          $("#loading-ico").hide();
+          $("#buscar").prop( "disabled", false );
+        },
+        error: function (data){
+          $("#loading-ico").hide();
+          $("#buscar").prop( "disabled", false );
+        }
+      });
+        
+
+    });
+    function addData(chart, label, data) {
+        chart.data.labels.push(label);
+        chart.data.datasets.forEach((dataset) => {
+            dataset.data.push(data);
+        });
+        chart.update();
+    }
+    function removeData(chart) {
+        chart.data.labels.pop();
+        chart.data.datasets.forEach((dataset) => {
+            dataset.data.pop();
+        });
+        chart.update();
+    }
+</script>
+
+{% endblock %}
+

@@ -1,0 +1,27 @@
+body, html{
+    font-family: 'Raleway', sans-serif;
+}
+
+.bg-dark {
+    background-color: #006591 !important;;
+}
+
+nav .active{
+    background-color: black;
+}
+
+.linea{
+    background-color: gray;
+    height: 10px;
+    width: 100%;
+}
+
+.bottom{
+    background-color: #231f1f;
+    height: 30px;
+    width: 100%;
+}
+
+.bottom p{
+    color: white;
+}

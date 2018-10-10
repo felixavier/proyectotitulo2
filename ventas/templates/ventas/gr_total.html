@@ -1,0 +1,51 @@
+{% extends "common/base.html" %}
+{% load static %}
+
+{% block title %}Evolución de las ventas{% endblock %}
+
+{% block content %}
+
+<h2>Evolución de las ventas</h2>
+
+<canvas id="myChart" width="300" height="200"></canvas>
+<script>
+var ctx = document.getElementById("myChart");
+var myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: {{ fecha|safe }},
+        datasets: [{
+            label: 'Total',
+            data: {{ total }},
+            backgroundColor: [                
+                'rgba(54, 162, 235, 0.2)'
+            ],
+            borderColor: [                
+                'rgba(54, 162, 235, 1)'
+            ],
+            borderWidth: 1.5
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero:true
+                }
+            }],
+            xAxes: [{
+                
+                type: 'time',
+                time: {
+                    displayFormats: {
+                        day: 'MMM D'
+                    }
+                }
+            }]
+        }
+    }
+});
+</script>
+
+{% endblock %}
+

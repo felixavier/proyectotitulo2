@@ -1,0 +1,47 @@
+{% extends "common/base.html" %}
+{% load static %}
+
+{% block title %}Productos más vendidos{% endblock %}
+
+{% block content %}
+
+<h2 class="mb-3 mt-2">Productos más vendidos</h2>
+
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Nombre</th>
+            <th scope="col">Divisa</th>
+            <th scope="col">Precio Total</th>
+            <th scope="col">Cantidad</th>
+            <th scope="col">Entregados</th>
+            <th scope="col">Para facturar</th>
+            <th scope="col">Facturados</th>
+            <!--<th scope="col">Detalle</th>-->
+          </tr>
+        </thead>
+        <tbody>
+            {% for obj in out %}
+                <tr>
+                    <td scope="row">{{ obj.name }}</td>
+                    <td>{{ obj.currency_id }}</td>
+                    <td>${{ obj.price_total }}</td>
+                    <td>{{ obj.product_uom_qty }}</td>
+                    <td>{{ obj.qty_delivered}}</td>
+                    <td>{{ obj.qty_to_invoice}}</td>
+                    <td>{{ obj.qty_invoiced}}</td>
+                    
+                    <!--<td><a href="#"><button class="btn btn-primary">Ver Detalle</button></a></td>-->
+                </tr>
+                
+            {% empty %}
+                NO DATA
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+{% endblock %}
+
