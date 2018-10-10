@@ -1,0 +1,37 @@
+html, body {
+    font-family: 'Raleway', sans-serif;
+    height: 100%;
+    min-height: 100%;
+}
+
+.logo-font{
+    font-family: 'Audiowide', cursive;
+}
+
+.logo-size{
+    font-size: 1.85rem;
+}
+
+.bg-dark {
+    background-color: #006591 !important;;
+}
+
+nav .active{
+    background-color: #084966;
+}
+
+.linea{
+    background-color: #084966;
+    height: 10px;
+    width: 100%;
+}
+
+.bottom{
+    background-color: #006591;
+    height: 30px;
+    width: 100%;
+}
+
+.bottom p{
+    color: white;
+}

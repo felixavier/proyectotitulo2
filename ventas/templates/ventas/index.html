@@ -1,0 +1,48 @@
+{% extends "common/base.html" %}
+{% load static %}
+
+{% block title %}Ventas{% endblock %}
+
+{% block content %}
+<h1>GRÁFICO <small>prueba</small></h1>
+    <img src="{% static 'img/grafico_test.png' %}" class="img-fluid" alt="Responsive image">
+<h1 class="mt-5">VENTAS</h1>
+
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col"># de presupuesto</th>
+            <th scope="col">Fecha</th>
+            <th scope="col">Cliente</th>
+            <th scope="col">Comercial</th>
+            <th scope="col">Total</th>
+            <th scope="col">Estado</th>
+            <!--<th scope="col">Detalle</th>-->
+          </tr>
+        </thead>
+        <tbody>
+            {% for partner in partners %}
+                <tr>
+                    <td scope="row">{{ partner.name }}</td>
+                    <td>{{ partner.date_order }}</td>
+                    <td>{{ partner.partner_id.1}}</td>
+                    <td>{{ partner.user_id.1 }}</td>
+                    <td>{{ partner.amount_total }} $</td>
+                    {% if partner.state == 'sale' %}
+                    <td>A facturar</td>
+                    {% else  %}
+                    <td>Presupuesto</td>
+                    {% endif %}
+                    <!--<td><a href="#"><button class="btn btn-primary">Ver Detalle</button></a></td>-->
+                </tr>
+                
+            {% empty %}
+                NO DATA
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}
+

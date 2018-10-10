@@ -1,0 +1,32 @@
+
+#particles-js{
+    width: 100%;
+    height: 100%;
+    background-image: url('');
+    background-size: cover;
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+}
+
+main{
+    min-height: 700px;
+    height: 700px;
+}
+.home-card {
+    position: fixed;
+    top: 45%;
+    left: 50%;
+    z-index: 100;
+    height: 200px;
+    width: 200px;
+    border: solid #004868 1px;
+    padding: 5px;
+    border-radius: 5px;
+    background: #12516d;
+    margin: -110px 0 0 -100px;
+    box-sizing: border-box;
+}
+
+.card-body{
+    color: white;
+}
