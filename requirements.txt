@@ -1,5 +1,9 @@
 Django==2.1
 sorl-thumbnail==12.3
 ERPpeek==1.6.3
+<<<<<<< HEAD
 djangodoo==0.2.3
 pandas==0.23.4
+=======
+djangodoo==0.2.3
+>>>>>>> origin/master

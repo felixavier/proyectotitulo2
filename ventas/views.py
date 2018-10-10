@@ -2,15 +2,37 @@ from django.shortcuts import render
 from django.views import generic
 from django.http import HttpResponse
 from django.template import loader
+<<<<<<< HEAD
 from django.http import JsonResponse
 from django.conf import settings
 import pandas as pd
 from datetime import datetime
+=======
+
+from django.conf import settings
+import xmlrpc.client
+import erppeek
+from operator import itemgetter, attrgetter
+>>>>>>> origin/master
 
 class IndexView(generic.TemplateView):
     template_name = 'ventas/index.html'
 
 def listar(request):
+<<<<<<< HEAD
+=======
+    config = getattr(settings, "ODOO_HOST", False)
+    try:
+        settings.odoo = erppeek.Client("%s:%d" % (config['HOST'], config['PORT']), db=config['DB'],
+                                       user=config['USER'], password=config['PASSWORD'], verbose=False)
+        settings.odoo.context = {"lang": settings.LANGUAGE_CODE}
+        settings.odoo_models = {}
+        settings.deferred_m2o = {}
+        settings.deferred_o2m = {}
+    except ConnectionRefusedError:
+        print("Unable to connect to a running Odoo server.")
+        raise
+>>>>>>> origin/master
     odoo = settings.odoo
     model = odoo.read('sale.order',[['state', '=', 'sale']],'name date_order partner_id user_id amount_total state')
     model = sorted(model, key=lambda k: k['amount_total'], reverse=True) 
@@ -18,6 +40,7 @@ def listar(request):
     context = {
         'partners': model,
     }
+<<<<<<< HEAD
     return HttpResponse(template.render(context, request))
 
 def gr_total(request):
@@ -98,4 +121,6 @@ def tb_productos(request):
     context = {
         'out': out
     }
+=======
+>>>>>>> origin/master
     return HttpResponse(template.render(context, request))
