@@ -1,0 +1,255 @@
+{% extends "common/base.html" %}
+{% load static %}
+
+{% block title %}Inventario{% endblock %}
+
+{% block content %}
+
+<script> 
+    var colores = ['rgba(255,179,186,1)','rgba(255,223,186,1)','rgba(255,255,186,1)','rgba(186,255,201,1)','rgba(186,225,255,1)','rgba(90, 237, 213,1)','rgba(48, 137, 172,1)','rgba(254, 196, 118,1)','rgba(209, 64, 109,1)','rgba(163, 54, 180,1)','rgba(141, 196, 79,1)','rgba(28, 164, 92,1)','rgba(255, 199, 24,1)','rgba(255, 158, 15,1)','rgba(218, 72, 59,1)','rgba(68, 134, 244,1)','rgba(233, 234, 235,1)','rgba(155, 71, 159,1)','rgba224, 74, 63,1)','rgba(255, 211, 78,1)','rgba(13, 171, 98,1)','rgba(68, 138, 253,1)','rgba(231,174,191,1)','rgba(65,188,174,1)','rgba(186,185,181,1)','rgba(42,95,109,1)','rgba(124,57,72,1)'];
+    var colores_back = ['rgba(255,179,186,0.5)','rgba(255,223,186,0.5)','rgba(255,255,186,0.5)','rgba(186,255,201,0.5)','rgba(186,225,255,0.5)','rgba(90, 237, 213,0.5)','rgba(48, 137, 172,0.5)','rgba(254, 196, 118,0.5)','rgba(209, 64, 109,0.5)','rgba(163, 54, 180,0.5)','rgba(141, 196, 79,0.5)','rgba(28, 164, 92,0.5)','rgba(255, 199, 24,0.5)','rgba(255, 158, 15,0.5)','rgba(218, 72, 59,0.5)','rgba(68, 134, 244,0.5)','rgba(233, 234, 235,0.5)','rgba(155, 71, 159,0.5)','rgba224, 74, 63,0.5)','rgba(255, 211, 78,0.5)','rgba(13, 171, 98,0.5)','rgba(68, 138, 253,0.5)','rgba(231,174,191,0.5)','rgba(65,188,174,0.5)','rgba(186,185,181,0.5)','rgba(42,95,109,0.5)','rgba(124,57,72,0.5)'];
+</script>
+
+<script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery-ui.min.js' %}"></script>
+<link rel="stylesheet" type="text/css" href="{% static '/css/jquery-ui.min.css' %}" />  
+
+
+<div class="mt-4 mb-4 pt-2">
+    
+    <div class="form-check form-check-inline">
+        <label class="form-check-label" for="inlineRadio2" >Fecha</label>
+        <input type="text" class="form-control" id="dpInicio">
+    </div>
+    <div class="form-check form-check-inline">
+        <button type="button" class="btn btn-primary" id="buscar">Ver<i class="fas fa-chart-bar"></i></button>			
+    </div>
+	<div class="form-check form-check-inline">
+        <select class="custom-select custom-select-md" id="empleado">
+				<option  value="0" selected>Todos</option>
+				<option value="1">Fármacos</option>      
+				<option value="1">Alimentación</option> 
+			</select>
+    </div>
+    <div class="form-check form-check-inline">
+        <i class="fas fa-cog fa-spin fa-2x" style="color: #006591; display:none;" id="loading-ico"></i>
+    </div>
+</div>
+
+<div class="text-center" id="loading-ico"style="display:none;">
+    <i class="fas fa-cog fa-spin fa-5x" style="color: #006591; " ></i>
+    <p>cargando...</p>
+</div>
+
+<div class="row">        
+    <div class="col">
+        <canvas id="stockCantChart" width="50" height="50"></canvas>
+    </div>
+    <div class="col">
+        <canvas id="stockResCantChart" width="50" height="50"></canvas>
+    </div>    
+    <div class="col">
+            <canvas id="productosCategChart" width="50" height="50"></canvas>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm">
+            <canvas id="productosPriceChart" width="100" height="50"></canvas>
+    </div>
+</div>
+
+
+
+
+<script>
+    var stq = document.getElementById("stockCantChart");
+    var stockCantChart = new Chart(stq, {
+        type: 'pie',
+        data: {
+            labels:'',
+            datasets: [{
+                label: 'Total vendido ($)',
+                data: '',
+                backgroundColor: colores,
+                borderColor: colores_back,
+                borderWidth: 1.0
+            }]
+        },
+        options: {
+            title: {
+                display: true,
+                text: 'Cantidad de productos en stock (u)'
+            },
+            legend: {
+                display: false
+            },
+        }
+    });
+
+    var strq = document.getElementById("stockResCantChart");
+    var stockResCantChart = new Chart(strq, {
+        type: 'pie',
+        data: {
+            labels:'',
+            datasets: [{
+                label: 'Total vendido ($)',
+                data: '',
+                backgroundColor: colores,
+                borderColor: colores_back,
+                borderWidth: 1.0
+            }]
+        },
+        options: {
+            title: {
+                display: true,
+                text: 'Cantidad reservada de productos en stock (u)'
+            },
+            legend: {
+                display: false
+            },
+        }
+    });
+
+
+    var pPric = document.getElementById("productosPriceChart");
+    var productosPriceChart = new Chart(pPric, {
+        type: 'bar',
+        data: {
+            labels:'',
+            datasets: [{
+                label: 'Precio',
+                data: '',
+                backgroundColor: colores,
+                borderColor: colores_back,
+                borderWidth: 1.5
+            }]
+        },
+        options: {
+            title: {
+                display: true,
+                text: 'Precio de productos en bodega ($)'
+            },
+            plugins: {
+                labels: {
+                    render: 'value',
+                }
+            },
+            legend: {
+                display: false
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }],
+                xAxes: [{
+                    type: 'category',
+                    ticks: {
+                        autoSkip:false
+                    }
+                }]
+            }
+        }
+    });
+    
+    var prCat = document.getElementById("productosCategChart");
+    var productosCategChart = new Chart(prCat, {
+        type: 'pie',
+        data: {
+            labels: '',
+            datasets: [{
+                label: 'Total',
+                data: '',
+                backgroundColor: colores,
+                borderColor: colores_back,
+                borderWidth: 1.50
+            }]
+        },
+        options: {
+            title: {
+                    display: true,
+                    text: 'Total de las categorias'
+            },
+            legend: {
+                    display: false
+            }
+        }
+    });    
+</script>
+
+<script>
+    var fecha = new Date();
+    fecha.setMonth(fecha.getMonth()-3);
+    var opciones = {  
+        closeText: 'Cerrar',
+        prevText: '<Ant',
+        nextText: 'Sig>',
+        currentText: 'Hoy',
+        monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+        monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+        dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+        dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mié', 'Juv', 'Vie', 'Sáb'],
+        dayNamesMin: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sá'],
+        weekHeader: 'Sm',
+        dateFormat: 'dd/mm/yy',
+        firstDay: 1,
+        isRTL: false,
+        showMonthAfterYear: false,
+        yearSuffix: '',
+        setDate: fecha
+    };
+    $( function() {
+      $( "#dpInicio" ).datepicker( opciones);
+      $( "#dpFin" ).datepicker( opciones);      
+      $('#dpInicio').datepicker("setDate", fecha);
+      $('#dpFin').datepicker("setDate", new Date());
+    });
+    
+    $('#buscar').click(()=>{
+        $("#loading-ico").show();
+        $.ajax({
+            url: '/inventario/data',
+            type: "GET",
+            data: {
+            'tipo': 'dia',
+            'inicio':'01/01/2018',
+            'fin': '30/12/2018',
+            },
+            success: function (data) {                
+                // chart cantidad sotck
+                stockCantChart.data.datasets[0].data = data.list_stock_qty;
+                stockCantChart.data.labels = data.list_stock;
+                stockCantChart.update();
+                // chart cantidad reservada stock
+                stockResCantChart.data.datasets[0].data = data.list_stock_res_qty;
+                stockResCantChart.data.labels = data.list_stock;
+                stockResCantChart.update();
+                
+                // chart ventas-tiempo
+                productosPriceChart.data.datasets[0].data = data.list_prod_price;
+                productosPriceChart.data.labels = data.list_prod;
+                productosPriceChart.update();
+                
+                // chart categoria de productos x precio
+                productosCategChart.data.datasets[0].data = data.list_prod_category_price;
+                productosCategChart.data.labels = data.list_prod_category;
+                productosCategChart.update();
+                
+                $("#loading-ico").hide();
+                
+            },
+            error: function (data){
+                $("#loading-ico").hide();
+            }
+      });
+        
+
+    });
+      
+</script>
+
+
+
+{% endblock %}
+

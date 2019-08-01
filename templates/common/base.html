@@ -7,25 +7,19 @@
     <title>{% block title %}HOME{% endblock %}</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=Raleway|Audiowide" rel="stylesheet">
-<<<<<<< HEAD
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static '/css/style.css' %}" />    
 </head>
 <body>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.min.js" crossorigin="anonymous"></script> 
+    <script type="text/javascript" src="{% static 'js/chartjs-plugin-labels.js' %}"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     
-=======
-    {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static '/css/style.css' %}" />
-</head>
-<body>
->>>>>>> origin/master
-
+    
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <a class="navbar-brand logo-font logo-size" href="{% url 'home:index' %}">
-                   <!-- <img src="{% static 'contacto/img/unab.png' %}" width="296" height="57" class="d-inline-block align-top" alt="">  -->
+                  
                    PDD                  
             </a>    
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,8 +27,8 @@
             </button>           
             
             <div class="collapse navbar-collapse" id="navbar">            
-<<<<<<< HEAD
                 <ul class="navbar-nav mt-2 mt-lg-0 justify-content-end">
+                    <!--
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Ventas</a>
                         <div class="dropdown-menu">
@@ -42,36 +36,32 @@
                             <a class="dropdown-item" href="{% url 'ventas:evolucion_ventas' %}">Evolución de ventas</a>
                             <a class="dropdown-item" href="{% url 'ventas:fechas' %}">Ventas en el tiempo</a>
                             <a class="dropdown-item" href="{% url 'ventas:productos_vendidos' %}">Productos más vendidos</a>
+                            <a class="dropdown-item" href="{% url 'ventas:dashboard' %}">Dashboard</a>
                         </div>
+                    </li>
+                    -->
+                    {% url 'ventas:dashboard' as ventas_url %}
+                    {% url 'inventario:dashboard' as inventario_url %}
+                    {% url 'asistencia:dashboard' as asistencia_url %}
+                    {% url 'compras:dashboard' as compras_url %}
+                    {% url 'login:login' as login_url %}
+                    <li class="nav-item" {% if request.get_full_path == login_url %}style='display:none;'{% endif %}>
+                            <a class="nav-link  {% if request.get_full_path == ventas_url %}active{% endif %}" href="{% url 'ventas:dashboard' %}">Ventas</a>
+                    </li>
+                    <li class="nav-item" {% if request.get_full_path == login_url %}style='display:none;'{% endif %}>
+                            <a class="nav-link  {% if request.get_full_path == inventario_url %}active{% endif %}" href="{% url 'inventario:dashboard' %}">Inventario</a>
+                    </li>
+                    <li class="nav-item" {% if request.get_full_path == login_url %}style='display:none;'{% endif %}>
+                            <a class="nav-link  {% if request.get_full_path == asistencia_url %}active{% endif %}" href="{% url 'asistencia:dashboard' %}">Empleados</a>
+                    </li>
+                    <li class="nav-item" {% if request.get_full_path == login_url %}style='display:none;'{% endif %}>
+                        <a class="nav-link  {% if request.get_full_path == compras_url %}active{% endif %}" href="{% url 'compras:dashboard' %}">Compras</a>
                     </li>
                     <!--
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'ventas:index' %}">Contacto</a>
                     </li>
                     -->
-=======
-                <ul class="navbar-nav ml-auto mt-2 mt-lg-0 justify-content-end">
-                    <li class="nav-item">
-                        {% url 'ventas:listar' as ventas_url %}
-                        <a class="nav-link {% if request.get_full_path == ventas_url %}active{% endif %}" href="{% url 'ventas:listar' %}">Ventas</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Nosotros</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Servicios</a>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="#">Servicio 1</a>
-                            <a class="dropdown-item" href="#">Servicio 2</a>
-                            <a class="dropdown-item" href="#">Servicio 3</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#">Otros</a>
-                        </div>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'ventas:index' %}">Contacto</a>
-                    </li>
->>>>>>> origin/master
                 </ul>
             </div>
     </nav>
@@ -84,20 +74,14 @@
     <footer>
         <div class="linea mt-3"></div>
         <div class="bottom">
-            <p class="text-center"><span class="logo-font">PDD</span> Unab 2018</p>
+            <p class="text-center"><span class="logo-font">PDD</span></p>
         </div>
     </footer>
     
     
-<<<<<<< HEAD
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
        
-=======
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
->>>>>>> origin/master
 </body>
 </html>

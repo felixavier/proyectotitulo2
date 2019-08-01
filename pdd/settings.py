@@ -32,6 +32,10 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'ventas.apps.VentasConfig',
+    'inventario.apps.InventarioConfig',
+    'asistencia.apps.AsistenciaConfig',
+    'compras.apps.ComprasConfig',
+    'login.apps.LoginConfig',
     'home.apps.HomeConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -135,5 +139,5 @@ ODOO_HOST = {
     'PASSWORD': 'admin',
     'HOST': 'http://localhost',
     'PORT': 8069,
-    'DB': 'test'
+    'DB': 'Parque'
 }
