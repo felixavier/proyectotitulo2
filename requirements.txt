@@ -1,4 +1,4 @@
-Django==2.1
+Django==2.1.11
 sorl-thumbnail==12.3
 ERPpeek==1.6.3
 djangodoo==0.2.3
